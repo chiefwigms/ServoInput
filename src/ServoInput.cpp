@@ -214,6 +214,10 @@ void ServoInputSignal::setRangeMin(uint16_t min) {
 	if(pulseValidator(min)) pulseMin = min;
 }
 
+void ServoInputSignal::setRangeCenter(uint16_t center) {
+	pulseCenter = center;
+}
+
 void ServoInputSignal::setRangeMax(uint16_t max) {
 	if (pulseValidator(max)) pulseMax = max;
 }
