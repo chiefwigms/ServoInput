@@ -231,8 +231,8 @@ ServoInputSignal* ServoInputSignal::getNext() const {
 }
 
 boolean ServoInputSignal::pulseValidator(unsigned long pulse) {
-		return pulse >= PulseCenter - (PulseValidRange / 2)
-			&& pulse <= PulseCenter + (PulseValidRange / 2);
+	return pulse >= PulseCenter - (PulseValidRange / 2)
+		&& pulse <= PulseCenter + (PulseValidRange / 2);
 }
 
 long ServoInputSignal::remap(long pulse, long outMin, long outMax) const {
