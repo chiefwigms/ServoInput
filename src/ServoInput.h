@@ -58,7 +58,9 @@ public:
 
 	void setRange(uint16_t range);
 	void setRange(uint16_t min, uint16_t max);
+	void setRange(uint16_t min, uint16_t center, uint16_t max);
 	void setRangeMin(uint16_t min);
+	void setRangeCenter(uint16_t center);
 	void setRangeMax(uint16_t max);
 
 	void resetRange();
@@ -77,7 +79,8 @@ protected:
 
 	long remap(long pulse, long outMin, long outMax) const;
 
-	uint16_t pulseMin, pulseMax;  // user-set range values
+	uint16_t pulseMin, pulseCenter, pulseMax;  // user-set range values
+	boolean centered;
 
 private:
 	static ServoInputSignal* head;
@@ -100,6 +103,10 @@ public:
 
 	ServoInputPin(uint16_t pMin, uint16_t pMax) : ServoInputPin() {
 		ServoInputSignal::setRange(pMin, pMax);
+	}
+
+	ServoInputPin(uint16_t pMin, uint16_t pCenter, uint16_t pMax) : ServoInputPin() {
+		ServoInputSignal::setRange(pMin, pCenter, pMax);
 	}
 
 	void attachInterrupt() {

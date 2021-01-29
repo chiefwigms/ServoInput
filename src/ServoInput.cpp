@@ -185,17 +185,29 @@ uint16_t ServoInputSignal::getRangeMax() const {
 }
 
 uint16_t ServoInputSignal::getRangeCenter() const {
-	return ((pulseMax - pulseMin) / 2) + pulseMin;  // 1500 us with default min/max
+	if (centered)
+		return ((pulseMax - pulseMin) / 2) + pulseMin;  // 1500 us with default min/max
+	else
+		return pulseCenter;
 }
 
 void ServoInputSignal::setRange(uint16_t range) {
+	centered = true;
 	setRangeMin(PulseCenter - (range / 2));
 	setRangeMax(PulseCenter + (range / 2));
 }
 
 void ServoInputSignal::setRange(uint16_t min, uint16_t max) {
+	centered = true;
 	setRangeMin(min);
 	setRangeMax(max);
+}
+
+void ServoInputSignal::setRange(uint16_t min, uint16_t center, uint16_t max) {
+	centered = false;
+	pulseCenter = center;
+	pulseMin = min;
+	pulseMax = max;
 }
 
 void ServoInputSignal::setRangeMin(uint16_t min) {
@@ -219,13 +231,19 @@ ServoInputSignal* ServoInputSignal::getNext() const {
 }
 
 boolean ServoInputSignal::pulseValidator(unsigned long pulse) {
-	return pulse >= PulseCenter - (PulseValidRange / 2)
-		&& pulse <= PulseCenter + (PulseValidRange / 2);
+		return pulse >= PulseCenter - (PulseValidRange / 2)
+			&& pulse <= PulseCenter + (PulseValidRange / 2);
 }
 
 long ServoInputSignal::remap(long pulse, long outMin, long outMax) const {
 	if (pulse <= pulseMin) return outMin;
 	if (pulse >= pulseMax) return outMax;
-	return ::map(pulse, pulseMin, pulseMax, outMin, outMax);
+	if (centered)
+		return ::map(pulse, pulseMin, pulseMax, outMin, outMax);
+	else
+		if (pulse >= pulseCenter)
+			return ::map(pulse, pulseCenter, pulseMax, outMin, outMax);
+		else
+			return ::map(pulse, pulseMin, pulseCenter, -outMax, outMin);
 }
 
